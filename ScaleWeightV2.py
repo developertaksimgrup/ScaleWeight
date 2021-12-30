@@ -28,10 +28,10 @@ class application:
             self.frameProductCount.config(bg="#A00A30")
             self.labelProductCountName.config(bg="#A00A30")
             self.labelProductCountValue.config(bg="#A00A30")
-            self.buttonProductCount.config(bg="#041948")
-        else:
-            self.buttonTare.config(bg="#A00A30")
-            self.buttonProductCount.config(bg="#A00A30")
+            # self.buttonProductCount.config(bg="#041948")
+        # else:
+        #     self.buttonTare.config(bg="#A00A30")
+        #     self.buttonProductCount.config(bg="#A00A30")
 
 
     def onClickbuttonProductCount(self):
@@ -44,8 +44,6 @@ class application:
             self.labelProductCountName.config(bg="#429A0A")
             self.labelProductCountValue.config(bg="#429A0A")
             #self.buttonProductCount.config(bg="#429A0A")
-
-
 
     def onClickbuttonPlus(self):
         if (self.baseProductCount >= 10 and self.baseProductCount <50):
@@ -75,17 +73,7 @@ class application:
                 if (self.baseProductWeight > 0):
                     self.productCount = round(Decimal(self.netWeight) / Decimal(self.baseProductWeight),2)
                     if(self.productCount <=0 ): 
-                        #self.tareWeight =0
-                        #self.netWeight =0
-                        # self.baseProductCount =0
                         self.productCount =0
-                        #self.baseProductWeight =0
-                        #self.frameEmptyTare.config(bg="#A00A30")
-                        #self.labelEmptyTareName.config(bg="#A00A30")
-                        #self.labelEmptyTareValue.config(bg="#A00A30")
-                        #self.frameProductCount.config(bg="#A00A30")
-                        #self.labelProductCountName.config(bg="#A00A30")
-                        #self.labelProductCountValue.config(bg="#A00A30")
 
                 self.labelEmptyTareValue.config(text = str(round(self.tareWeight,3))+ " Kg." )
                 self.labelNetWeightValue.config(text = str(round(self.netWeight,3)) + " Kg.")
@@ -115,11 +103,10 @@ class application:
  
         self.root = window 
         self.root.attributes("-fullscreen", True)
-#        self.root.attributes("-topmost", 1)
+        self.root.attributes("-topmost", 1)
         self.root.geometry("800x480")
         
         self.weightScaleSerial = serial.Serial(port=self.serialPort, baudrate=9600,bytesize=serial.SEVENBITS, parity=serial.PARITY_EVEN, stopbits=serial.STOPBITS_ONE, timeout=1)
-        #self.weightScaleSerial = serial.Serial(port="/dev/ttyUSB0", baudrate=9600,bytesize=serial.SEVENBITS, parity=serial.PARITY_EVEN, stopbits=serial.STOPBITS_ONE, timeout=1)
 
         self.frameEmptyTare = Frame(self.root, bg='#A00A30')
         self.frameEmptyTare.place(relx=0, rely = 0, relwidth=0.5, relheight=0.25)
