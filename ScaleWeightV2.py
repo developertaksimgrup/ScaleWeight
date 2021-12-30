@@ -11,6 +11,8 @@ class application:
     tareWeight = 0.00
     netWeight = 0.00
     productCount = 0.00
+    lastClickedTime = time.time()
+    lastClickedCount = 0
     #serialPort ="COM7"
     serialPort ="/dev/ttyUSB0"
     def onClickbuttonTare(self):
@@ -52,7 +54,7 @@ class application:
             self.baseProductCount = self.baseProductCount+10
         else:
             self.baseProductCount = self.baseProductCount  + 1
-        self.buttonProductCount.config(text = str(self.baseProductCount))
+        self.buttonProductCount.config(text = str(self.baseProductCount) + " Ürün Tart")
     def onClickbuttonMinus(self):
         if (self.baseProductCount ==1):
             a=1
@@ -62,7 +64,7 @@ class application:
             self.baseProductCount = self.baseProductCount-10
         else:
             self.baseProductCount = self.baseProductCount  - 1
-        self.buttonProductCount.config(text = str(self.baseProductCount))
+        self.buttonProductCount.config(text = str(self.baseProductCount) + " Ürün Tart")
 
     def updateFormObjects(self):
         try:
@@ -72,18 +74,18 @@ class application:
                 self.netWeight = Decimal(result.Obj) - Decimal(self.tareWeight)
                 if (self.baseProductWeight > 0):
                     self.productCount = round(Decimal(self.netWeight) / Decimal(self.baseProductWeight),2)
-                    if(self.productCount <=0 ):
-                        self.tareWeight =0
-                        self.netWeight =0
+                    if(self.productCount <=0 ): 
+                        #self.tareWeight =0
+                        #self.netWeight =0
                         # self.baseProductCount =0
                         self.productCount =0
-                        self.baseProductWeight =0
-                        self.frameEmptyTare.config(bg="#A00A30")
-                        self.labelEmptyTareName.config(bg="#A00A30")
-                        self.labelEmptyTareValue.config(bg="#A00A30")
-                        self.frameProductCount.config(bg="#A00A30")
-                        self.labelProductCountName.config(bg="#A00A30")
-                        self.labelProductCountValue.config(bg="#A00A30")
+                        #self.baseProductWeight =0
+                        #self.frameEmptyTare.config(bg="#A00A30")
+                        #self.labelEmptyTareName.config(bg="#A00A30")
+                        #self.labelEmptyTareValue.config(bg="#A00A30")
+                        #self.frameProductCount.config(bg="#A00A30")
+                        #self.labelProductCountName.config(bg="#A00A30")
+                        #self.labelProductCountValue.config(bg="#A00A30")
 
                 self.labelEmptyTareValue.config(text = str(round(self.tareWeight,3))+ " Kg." )
                 self.labelNetWeightValue.config(text = str(round(self.netWeight,3)) + " Kg.")
@@ -98,14 +100,22 @@ class application:
             self.root.after(100, self.updateFormObjects)
 
 
-    
+    def CloseApplication(self,event):
+
+        if (self.lastClickedCount >= 10):quit()
+        elapasedTime = time.time() - self.lastClickedTime
+        if(elapasedTime < 1):
+            self.lastClickedCount = self.lastClickedCount + 1
+        else:
+            self.lastClickedCount = 0
+        self.lastClickedTime = time.time()
  
     def __init__(self, window):
  #github test1 
  
         self.root = window 
         self.root.attributes("-fullscreen", True)
-        self.root.attributes("-topmost", 1)
+#        self.root.attributes("-topmost", 1)
         self.root.geometry("800x480")
         
         self.weightScaleSerial = serial.Serial(port=self.serialPort, baudrate=9600,bytesize=serial.SEVENBITS, parity=serial.PARITY_EVEN, stopbits=serial.STOPBITS_ONE, timeout=1)
@@ -120,10 +130,14 @@ class application:
 
         self.frameNetWeight = Frame(self.root, bg='#20418E')
         self.frameNetWeight.place(relx=0.50, rely = 0, relwidth=0.5, relheight=0.25)
+        self.frameNetWeight.bind("<Button-1>", self.CloseApplication)
+        
         self.labelNetWeightName = Label(self.frameNetWeight, bg="#20418E", text = "Net Ağırlık", font="Verdana 16 bold", fg="white")
         self.labelNetWeightName.place(relx = 0.5,rely = 0.3,anchor = 'center')
+        self.labelNetWeightName.bind("<Button-1>", self.CloseApplication)
         self.labelNetWeightValue = Label(self.frameNetWeight, bg="#20418E", text = "0.00", font="Verdana 30 bold", fg="white")
         self.labelNetWeightValue.place(relx = 0.5,rely = 0.6,anchor = 'center')
+        self.labelNetWeightValue.bind("<Button-1>", self.CloseApplication)
 
 
 
@@ -153,11 +167,11 @@ class application:
 
 
 
-        self.buttonTare = Button(self.root, text="1-Boş Kasa Ağırlık AL", bg="#3B5798", command=self.onClickbuttonTare, font="Verdana 18 bold", fg="white")
+        self.buttonTare = Button(self.root, text="1-Boş Kasa Ağırlık AL", command=self.onClickbuttonTare, font="Verdana 18 bold")
         self.buttonTare.place(relx = 0, rely = 0.75, relwidth=0.5, relheight=0.25)
 
 
-        self.buttonProductCount = Button(self.root, text=str(self.baseProductCount), bg="#041948", command=self.onClickbuttonProductCount, font="Verdana 18 bold", fg="white")
+        self.buttonProductCount = Button(self.root, text=str(self.baseProductCount) + " Ürün Tart",  command=self.onClickbuttonProductCount, font="Verdana 18 bold")
         self.buttonProductCount.place(relx=0.5, rely = 0.75, relwidth=0.30, relheight=0.25)
 
 
